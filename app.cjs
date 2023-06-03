@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-var items = ["buy food" , "cook food", "eat food"];
+let items = ["buy food", "cook food", "eat food"];
+let workItems = [];
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
@@ -17,14 +18,24 @@ app.get("/", function (req, res) {
     var day = today.toLocaleDateString("en-US", options);
 
 
-    res.render("list", { kindOfDay: day, newListItems: items });
+    res.render("list", { listTitle: day, newListItems: items });
 });
 
 app.post("/", function (req, res) {
-   var item = req.body.newItem;
+    let item = req.body.newItem;
     items.push(item);
     res.redirect("/");
 
+})
+
+app.get("/work", function (req, res) {
+    res.render("list", { listTitle: "work list", newListItems: workItems });
+})
+
+app.post("/work", function (req, res) {
+    let item = req.body.newItem;
+    workItems.push(item);
+    res.redirect("/work");
 })
 
 app.listen(process.env.PORT || 3000, function () {
