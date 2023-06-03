@@ -1,28 +1,25 @@
 const express = require("express");
-const app = express();
 const bodyParser = require("body-parser");
-let items = ["buy food", "cook food", "eat food"];
-let workItems = [];
+const date = require(__dirname + "/date.cjs");
+
+const app = express();
+
+const items = ["buy food", "cook food", "eat food"];
+const workItems = [];
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
 app.set('view engine', 'ejs');
 
 app.get("/", function (req, res) {
-    var today = new Date();
-    var options = {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-    };
-
-    var day = today.toLocaleDateString("en-US", options);
-
+   const day = date.getDate();
 
     res.render("list", { listTitle: day, newListItems: items });
 });
 
 app.post("/", function (req, res) {
-    let item = req.body.newItem;
+    const item = req.body.newItem;
     if(req.body.list === "work") {
         workItems.push(item);
         res.redirect("/work");
